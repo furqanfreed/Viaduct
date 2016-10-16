@@ -279,8 +279,12 @@
         // and will cause output to also be quoted.
         //
 
+        @if type-of($current-attribute) == string {
+          $current-attribute : unquote($current-attribute)
+        }
+          
         @if not map-has-key($length-storage, $length) {
-            $new-attribute: ($length: unquote($current-attribute));
+            $new-attribute: ($length: $current-attribute);
         } @else {
 
             // Get list of matched attributes.
@@ -289,7 +293,7 @@
 
             // Append $current-attribute to the $attributes as a comma-seperated list.
 
-            $new-attribute: ($length: append(unquote($current-attribute), $attributes, comma));
+            $new-attribute: ($length: append($current-attribute), $attributes, comma);
         }
 
         // Merge the $new-class into the $length-storage.
@@ -307,7 +311,11 @@
   @each $length, $attributes in $length-storage {
 
     #{$attributes} {
-      #{$property}: unquote($length);
+      @if type-of($length) == string {
+        $length : unquote($length)
+      }
+      
+      #{$property}: $length;
     }
 
   }
